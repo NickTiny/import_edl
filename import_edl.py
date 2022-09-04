@@ -64,8 +64,7 @@ def scale_meta_speed(sequence_editor, strip_list, strip_movie, scale):
         strip_speed.multiply_speed = 1.0 / scale
         strip_meta.frame_offset_end = strip_movie.frame_duration - int(strip_movie.frame_duration * scale)
 
-    strip_speed.update()
-    strip_meta.update()
+
     return strip_meta
 
 
@@ -190,12 +189,9 @@ def load_edl(scene, filename, reel_files, reel_offsets, global_offset):
                 final_strip = strip
 
                 # Copied from above
-                final_strip.update()
                 final_strip.frame_offset_start = rec_start - final_strip.frame_final_start
                 final_strip.frame_offset_end = rec_end - final_strip.frame_final_end
-                final_strip.update()
                 final_strip.frame_offset_end += (final_strip.frame_final_end - rec_end)
-                final_strip.update()
 
                 if edit.transition_type == parse_edl.TRANSITION_DISSOLVE:
                     apply_dissolve_fcurve(final_strip, edit.transition_duration)
@@ -280,12 +276,9 @@ def load_edl(scene, filename, reel_files, reel_offsets, global_offset):
                 else:
                     final_strip = strip
 
-                final_strip.update()
                 final_strip.frame_offset_start = rec_start - final_strip.frame_final_start
                 final_strip.frame_offset_end = rec_end - final_strip.frame_final_end
-                final_strip.update()
                 final_strip.frame_offset_end += (final_strip.frame_final_end - rec_end)
-                final_strip.update()
 
                 if edit.transition_duration:
                     if not prev_edit:
@@ -295,7 +288,6 @@ def load_edl(scene, filename, reel_files, reel_offsets, global_offset):
                         for other in prev_edit.custom_data:
                             if other.type != 'SOUND':
                                 other.frame_offset_end += (other.frame_final_end - new_end)
-                                other.update()
 
                 # Apply dissolve
                 if edit.transition_type == parse_edl.TRANSITION_DISSOLVE:
@@ -341,13 +333,6 @@ def load_edl(scene, filename, reel_files, reel_offsets, global_offset):
                 prev_edit = edit
             #track += 1
 
-        # break
-
-    for strip in strip_list:
-        strip.update(data=True)
-        strip.select = True
-
-    return ""
 
 def get_open_channel(scene):
     """Find first free channel"""
